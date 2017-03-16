@@ -2,14 +2,14 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "jenkins-persistent-custom",
+    "name": "jenkins-slave-deployer",
     "creationTimestamp": null,
     "annotations": {
-      "openshift.io/display-name": "Jenkins (Persistent)",
-      "description": "Jenkins service, with persistent storage.\n\nNOTE: You must have persistent volumes available in your cluster to use this template.",
+      "openshift.io/display-name": "Jenkins slave deployer",
+      "description": "Jenkins slave deployer",
       "iconClass": "icon-jenkins",
       "tags": "instant-app,jenkins",
-      "template.openshift.io/long-description": "This template deploys a Jenkins server capable of managing OpenShift Pipeline builds and supporting OpenShift-based oauth login."
+      "template.openshift.io/long-description": "This template deploys a Jenkins slaves from imagestreams"
     }
   },
   "message": "A Jenkins service has been created in your project.  Log into Jenkins with your OpenShift account.  The tutorial at https://github.com/openshift/origin/blob/master/examples/jenkins/README.md contains more information about using this template.",
@@ -31,7 +31,7 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "jenkins-slave-jdk8"
+                "${JENKINS_IMAGE_STREAM_NAME}"
               ],
               "from": {
                 "kind": "ImageStreamTag",
@@ -61,7 +61,14 @@
               {
                 "name": "${JENKINS_IMAGE_STREAM_NAME}",
                 "image": " ",
-
+                "args": [
+                            "-master",
+                            "http://jenkins",
+                            "-username",
+                            "admin",
+                            "-password",
+                            "password"
+                        ],
                 "resources": {
                   "limits": {
                     "memory": "${MEMORY_LIMIT}"
@@ -101,13 +108,13 @@
       "name": "NAMESPACE",
       "displayName": "Jenkins ImageStream Namespace",
       "description": "The OpenShift Namespace where the Jenkins ImageStream resides.",
-      "value": "ci"
+      "value": "openshift"
     },
     {
       "name": "JENKINS_IMAGE_STREAM_TAG",
       "displayName": "Jenkins ImageStreamTag",
       "description": "Name of the ImageStreamTag to be used for the Jenkins image.",
-      "value": "jenkins-master:latest"
+      "value": "jenkins-slave:latest"
     }
   ],
   "labels": {

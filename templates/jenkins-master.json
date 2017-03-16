@@ -278,7 +278,7 @@
       "name": "NAMESPACE",
       "displayName": "Jenkins ImageStream Namespace",
       "description": "The OpenShift Namespace where the Jenkins ImageStream resides.",
-      "value": "ci"
+      "value": "openshift"
     },
     {
       "name": "JENKINS_IMAGE_STREAM_TAG",
