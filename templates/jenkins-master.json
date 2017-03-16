@@ -205,35 +205,11 @@
       }
     },
     {
-      "kind": "Service",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "${JNLP_SERVICE_NAME}"
-      },
-      "spec": {
-        "ports": [
-          {
-            "name": "agent",
-            "protocol": "TCP",
-            "port": 50000,
-            "targetPort": 50000,
-            "nodePort": 0
-          }
-        ],
-        "selector": {
-          "name": "${JENKINS_SERVICE_NAME}"
-        },
-        "type": "ClusterIP",
-        "sessionAffinity": "None"
-      }
-    },
-    {
        "kind": "Service",
        "apiVersion": "v1",
        "metadata": {
          "name": "${JENKINS_SERVICE_NAME}",
          "annotations": {
-           "service.alpha.openshift.io/dependencies": "[{\"name\": \"${JNLP_SERVICE_NAME}\", \"namespace\": \"\", \"kind\": \"Service\"}]",
            "service.openshift.io/infrastructure": "true"
          },
          "creationTimestamp": null
@@ -245,6 +221,13 @@
              "protocol": "TCP",
              "port": 80,
              "targetPort": 8080,
+             "nodePort": 0
+           },
+           {
+             "name": "swarm",
+             "protocol": "TCP",
+             "port": 50000,
+             "targetPort": 50000,
              "nodePort": 0
            }
          ],
@@ -273,7 +256,7 @@
       "name": "ENABLE_OAUTH",
       "displayName": "Enable OAuth in Jenkins",
       "description": "Whether to enable OAuth OpenShift integration. If false, the static account 'admin' will be initialized with the password 'password'.",
-      "value": "true"
+      "value": "false"
     },
     {
       "name": "JVM_ARCH",
@@ -298,7 +281,7 @@
       "name": "NAMESPACE",
       "displayName": "Jenkins ImageStream Namespace",
       "description": "The OpenShift Namespace where the Jenkins ImageStream resides.",
-      "value": "openshift"
+      "value": "ci"
     },
     {
       "name": "JENKINS_IMAGE_STREAM_TAG",
@@ -308,6 +291,6 @@
     }
   ],
   "labels": {
-    "template": "jenkins-persistent-template"
+    "template": "jenkins-persistent-template-custom"
   }
 }
